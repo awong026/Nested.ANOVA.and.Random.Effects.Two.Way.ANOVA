@@ -49,13 +49,58 @@ par(mfrow = c(1,1))
 
 
 #2. Find data that is random effects completely crossed and perform the appropriate analysis. 
+library(carData)
+data<-ToothGrowth
+#The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. 
+#Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods,
+#(orange juice or ascorbic acid (a form of vitamin C and coded as VC).
+#Response is len and the two random effects factors are supp and dose. 
+#supp is a random effect because there are more than 2 ways to inject a suppliment. These are 2 ways out of a population of different ways to inject a treatment
+#dose is a random effect because there are in  infinite amount of different doses the experimenters could have chosen. They chose 3 levels out of an infinite amount of possible ones.
+
+attach(data)
+summary(data) #supp has 2 levels with 30 observations in each
+#Need to make dose a factor since it has been coded as a numeric variable
+data$dose<-as.factor(data$dose)
+summary(data) #Now we see that dose has 3 levels with 20 observations in each
+
+#Check if the data is completely crossed
+xtabs(~ supp + dose, ToothGrowth)
+#But here we have completely crossed and is balanced at n = 10.
+
+
+#EDA
+
+#mean
+tapply(data$len, data$supp, mean) #Kind of close, but need to check variance to see if 4 is a larger difference for means
+tapply(data$len, data$dose, mean) #Some number look far from each other, but need to check variance to see if this is true
+
+
+#variance
+tapply(data$len, data$supp, var) #variances are not close to one another, but at least one is not 10 times larger than the other so, still okay
+tapply(data$len, data$dose, var) #variances are not close to one another, but at least one is not 10 times larger than the other so, still okay
+
+#boxplot
+ggplot(data, aes(supp, len, color = dose)) + geom_boxplot() #Confirms that there is probably a difference, since some interquartile regions don't intersect
+
+
+
+model <- aov(len~supp * dose, data = data) #Complete model with interactions
+anova(model) #Wanted to look at ANOVA table so did anova(model)
+#Both the main effects and their interaction effect is signifcant
+#This means I will look at the study according to interaction effect now.
 
 
 
 
+##Model Checking
+par(mfrow = c(2,2))
+plot(model) #Residuals look like no pattern in resdiuals vs fitted and looks pretty normal. 
+#Need to really look out of oultiers though. Looks like 3 observations might be outliers (Leverage Points). Theses could really "mess" with the analysis
 
 
-
-
-
-
+#Interaction Effect
+par(mfrow= c(1,1))
+interaction.plot(supp, dose, len)
+#Toothgrowth length is higher in OJ suppiment treatment for dose .5 and 1 than in these 2 doses with VC suppliment treatment type. 
+#For dose 2, OJ suppliment actually has slightly less toothgrowth length than VC. 
