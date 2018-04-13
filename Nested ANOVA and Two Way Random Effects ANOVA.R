@@ -44,7 +44,7 @@ par(mfrow =c(2,2))
 plot(lm(data.shift.aov)) #Looks like no pattern in res vs fitted, and qqnorm for residuals plot looks pretty good except maybe some outliers at the ends. 
 par(mfrow = c(1,1))
 
-#Shift doesn't change..................Part Rate
+#Conclusion:Shift (Day or Night) doesn't have a significant impact on the Part Rate.
 
 
 
@@ -102,5 +102,6 @@ plot(model) #Residuals look like no pattern in resdiuals vs fitted and looks pre
 #Interaction Effect
 par(mfrow= c(1,1))
 interaction.plot(supp, dose, len)
-#Toothgrowth length is higher in OJ suppiment treatment for dose .5 and 1 than in these 2 doses with VC suppliment treatment type. 
+
+#Conclusion:Toothgrowth length is higher in OJ suppiment treatment for dose .5 and 1 than in these 2 doses with VC suppliment treatment type. 
 #For dose 2, OJ suppliment actually has slightly less toothgrowth length than VC. 
